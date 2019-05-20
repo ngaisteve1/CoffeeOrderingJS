@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title></title>
+    <style>
+        html {
+            font-size: 1em
+        }
+
+        div.Mesg {
+            height: 20px !important;
+        }
+
+        ul#menu {
+            display: flex;
+            list-style-type: none;
+            justify-content: space-around;
+            padding: 0;
+            margin: 0;
+        }
+
+            ul#menu > li {
+                display: block;
+            }
+    </style>
+</head>
+<body>
+    <div style="max-width: 500px; margin:0 auto;border:1px solid silver;padding:10px">
+        <h1 style="text-align:center">Starbark Ordering System</h1>
+        <!--<a href="">Add order</a><br />-->
+        <ul id="menu">
+            <li><a id="ViewAllOrders" href="#">View all orders</a></li>
+            <li><a id="ViewCurrentOrder" href="#">Order in Preparation</a></li>
+            <li><a id="DeliverOrder" href="#">Release one order</a></li>
+        </ul>
+
+        <hr />
+        <div class="Mesg"></div>
+        <hr />
+        <div class="input-group">
+            <input id="customerName" type="text" class="form-control" placeholder="Enter customer's name" />
+            <input id="customerTotalCups" type="number" class="form-control" placeholder="Enter number of cups" min="1" />
+            <span class="input-group-btn">
+                <button id="btnAdd" class="btn btn-default" type="submit">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </span>
+        </div>
+        <hr />
+        <div id="AllOrders"></div>
+        <div id="CurentOrder"></div>
+    </div>
+
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+
+
+    const order = [];
+
+    const customer = {
+        name: '',
+        totalCups: 0
+    }
+
+    const checkCustomerOrders = () => {
+        if (order.length === 0) {
+            $('.Mesg').show();
+
+            $('.Mesg').text("No customer orders at the moment.").fadeOut(6000, 0, function () {
+                $('.Mesg').text('');
+                $('.Mesg').show();
+            });
+        }
+    }
+
+    $('#AllOrders').hide();
+
+    $('#btnAdd').click(function () {
+        debugger
+
+        var itemName = $('#customerName');
+        var itemTotalCups = $('#customerTotalCups');
+
+        // Basic Validation
+        if (itemName.val().trim() === "" || parseInt(itemTotalCups.val()) === 0) {
+            return;
+        }
+
+        customer.name = itemName.val();
+        customer.totalCups = itemTotalCups.val();
+
+        // Data structure Queue
+        order.push(Object.assign({}, customer));
+
+        // UX
+        $('.Mesg').text("Order added").fadeOut(4000, 0, function () {
+            $('.Mesg').text('');
+            $('.Mesg').show();
+        });
+
+        // UI - HTML rendering - start
+        if (order.length === 1) {
+            // Create table column name
+            $('#AllOrders').append('<table id="tbl" class="table table-bordered"><tr><td>Customer</td><td>Cups</td></tr></table>');
+
+        }
+
+        var itemElement = `<tr><td>${itemName.val()}</td><td>${itemTotalCups.val()}</td></tr>`;
+
+        $('#tbl').append(itemElement);
+        // UI - HTML rendering - end
+               
+
+        // Reset textbox
+        itemName.val("");
+        itemTotalCups.val("");
+
+        // Optional Design
+        $('#ViewAllOrders').click();
+        debugger;
+    })
+
+    $('#ViewAllOrders').click(function () {
+        checkCustomerOrders();
+        $('#AllOrders').show();
+        $('#CurentOrder').hide();
+    })
+
+
+
+    $('#ViewCurrentOrder').click(function () {
+        debugger;
+        checkCustomerOrders();
+        $('#AllOrders').hide();
+        $('#CurentOrder').show();
+
+        var top = order[0];
+        console.log(top);
+
+        $('#CurentOrder').empty();
+
+        // UI
+        $('#CurentOrder').append('<table id="tbl2" class="table table-bordered"><tr><td>Customer</td><td>Cups</td></tr></table>');        
+        var orderElement = `<tr><td>${top.name}</td><td>${top.totalCups}</td></tr>`;
+
+        $('#tbl2').append(orderElement);
+    })
+
+    $('#DeliverOrder').click(function () {
+        debugger
+
+
+        if (order.length > 0) {
+            // Remove one element from array. FIFO.
+            order.shift();
+            // Element removed.
+            
+            // Remove the html element as well
+            //$(".orderItem:first").remove();
+            $('#tbl tr').eq(1).remove();
+
+            // UX
+            $('.Mesg').text("One customer order delivered").fadeOut(4000, 0, function () {
+                $('.Mesg').text('');
+                $('.Mesg').show();
+            });
+
+            //
+            if (order.length === 0) {
+                $('#tbl').empty();
+            }
+        }
+        else {
+
+            // Optional Design
+            $('#ViewAllOrders').click();
+        }
+    })
+
+</script>
