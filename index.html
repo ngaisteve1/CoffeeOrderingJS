@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -9,6 +10,14 @@
     <style>
         html {
             font-size: 1em
+        }
+
+        div#main {
+            max-width: 500px;
+            margin: 10px auto;
+            border: 1px solid silver;
+            padding: 10px;
+            min-height: 600px;
         }
 
         div.Mesg {
@@ -23,14 +32,16 @@
             margin: 0;
         }
 
-            ul#menu > li {
-                display: block;
-            }
+        ul#menu>li {
+            display: block;
+        }
     </style>
 </head>
+
 <body>
-    <div style="max-width: 500px; margin:0 auto;border:1px solid silver;padding:10px">
-        <h1 style="text-align:center">Starbark Ordering System</h1>
+    <div id='main'>
+        <h3 style="text-align:center">Steve Coffee Ordering System
+            <i class="fa fa-coffee" style="font-size:1.5em;color:brown"></i></h1>
         <!--<a href="">Add order</a><br />-->
         <ul id="menu">
             <li><a id="ViewAllOrders" href="#">View all orders</a></li>
@@ -43,7 +54,8 @@
         <hr />
         <div class="input-group">
             <input id="customerName" type="text" class="form-control" placeholder="Enter customer's name" />
-            <input id="customerTotalCups" type="number" class="form-control" placeholder="Enter number of cups" min="1" />
+            <input id="customerTotalCups" type="number" class="form-control" placeholder="Enter number of cups"
+                min="1" />
             <span class="input-group-btn">
                 <button id="btnAdd" class="btn btn-default" type="submit">
                     <i class="fa fa-plus"></i>
@@ -56,13 +68,12 @@
     </div>
 
 </body>
+
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script>
-
-
     const order = [];
 
     const customer = {
@@ -109,15 +120,51 @@
         // UI - HTML rendering - start
         if (order.length === 1) {
             // Create table column name
-            $('#AllOrders').append('<table id="tbl" class="table table-bordered"><tr><td>Customer</td><td>Cups</td></tr></table>');
+            $('#AllOrders').append('<table id="tbl" class="table table-bordered"><tr><td>Customer</td><td>Cups</td><td></td></tr></table>');
 
         }
 
-        var itemElement = `<tr><td>${itemName.val()}</td><td>${itemTotalCups.val()}</td></tr>`;
+        var itemElement = `<tr><td>${itemName.val()}</td><td>${itemTotalCups.val()}</td><td><a class='del' href='#'>Cancel order</a></td></tr>`;
 
         $('#tbl').append(itemElement);
         // UI - HTML rendering - end
-               
+
+        $('.del').click(function (e) {
+
+            e.stopImmediatePropagation();
+
+            // Delete order object
+            debugger
+            //var elm = $(this).parent().text().substr(0, $(this).parent().text().length-1);
+            // console.log(elm);
+            // console.log(order.indexOf(elm));
+
+            //order.splice(order.indexOf(elm),1);
+            //order.splice(2,1);
+
+            // Delete HTML element
+            // $(this).parent().parent().remove();
+
+            // Delete order object
+
+            debugger;
+            // var elm = $(this).closest('tr');
+
+            // var nameToDelete = elm.find('td:first').text();
+
+            // // filter out order
+            // order = order.filter(item => item.name !== nameToDelete);
+            // //console.log('order now is = ', order);
+            // // Delete HTML element
+            // elm.remove();
+
+            var $row = $(this).closest('tr');
+            var index = $row.index() - 1;
+            order.splice(index, 1);
+
+            // Delete HTML element
+            $row.remove();
+        })
 
         // Reset textbox
         itemName.val("");
@@ -134,8 +181,6 @@
         $('#CurentOrder').hide();
     })
 
-
-
     $('#ViewCurrentOrder').click(function () {
         debugger;
         checkCustomerOrders();
@@ -148,8 +193,8 @@
         $('#CurentOrder').empty();
 
         // UI
-        $('#CurentOrder').append('<table id="tbl2" class="table table-bordered"><tr><td>Customer</td><td>Cups</td></tr></table>');        
-        var orderElement = `<tr><td>${top.name}</td><td>${top.totalCups}</td></tr>`;
+        $('#CurentOrder').append('<table id="tbl2" class="table table-bordered"><tr><td>Customer</td><td>Cups</td><td></td></tr></table>');
+        var orderElement = `<tr><td>${top.name}</td><td>${top.totalCups}</td><td></td></tr>`;
 
         $('#tbl2').append(orderElement);
     })
@@ -162,7 +207,7 @@
             // Remove one element from array. FIFO.
             order.shift();
             // Element removed.
-            
+
             // Remove the html element as well
             //$(".orderItem:first").remove();
             $('#tbl tr').eq(1).remove();
