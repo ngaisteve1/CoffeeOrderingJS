@@ -1,4 +1,4 @@
-# CoffeeOrderingJS
+# Simple Coffee Ordering App with Javascript
 
 ### [Try it out](https://ngaisteve1.github.io/CoffeeOrderingJS/)
 
